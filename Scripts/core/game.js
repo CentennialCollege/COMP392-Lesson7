@@ -41,12 +41,18 @@ var game = (function () {
     var sphereMaterial;
     var ambientLight;
     var spotLight;
+    var pointLight;
     var control;
     var gui;
     var stats;
     var step = 0;
     var clock;
-    var firstPersonControls;
+    var tower;
+    var towerGeometry;
+    var towerMaterial;
+    var ground;
+    var groundGeometry;
+    var groundMaterial;
     function init() {
         // Instantiate a new Scene object
         //scene = new Scene();
@@ -54,50 +60,30 @@ var game = (function () {
         clock = new Clock();
         setupRenderer(); // setup the default renderer
         setupCamera(); // setup the camera
-        //Add a Plane to the Scene
-        plane = new gameObject(new PlaneGeometry(20, 20, 1, 1), new LambertMaterial({ color: 0xf4a460 }), 0, 0, 0);
-        plane.rotation.x = -0.5 * Math.PI;
-        plane.name = "ground";
-        scene.add(plane);
-        console.log("Added Plane Primitive to scene...");
-        // Add a Sphere to the Scene
-        sphereGeometry = new SphereGeometry(2.5, 32, 32);
-        sphereMaterial = new LambertMaterial({ color: 0xff0000 });
-        sphere = new gameObject(sphereGeometry, sphereMaterial, 0, 2.5, 0);
-        sphere.name = "The Red Planet";
-        scene.add(sphere);
-        console.log("Added Sphere Primitive to the scene");
-        // setup first person controls
-        firstPersonControls = new FirstPersonControls(sphere);
-        firstPersonControls.lookSpeed = 0.4;
-        firstPersonControls.movementSpeed = 10;
-        firstPersonControls.lookVertical = true;
-        firstPersonControls.constrainVertical = true;
-        firstPersonControls.verticalMin = 0;
-        firstPersonControls.verticalMax = 2.0;
-        firstPersonControls.lon = -150;
-        firstPersonControls.lat = 120;
-        // add an axis helper to the scene
-        axes = new AxisHelper(20);
-        sphere.add(axes);
-        console.log("Added Axis Helper to scene...");
-        // Add an AmbientLight to the scene
-        //ambientLight = new AmbientLight(0x090909);
-        //scene.add(ambientLight);
-        //console.log("Added an Ambient Light to Scene");
-        // Add a SpotLight to the scene
-        spotLight = new SpotLight(0xffffff);
-        spotLight.position.set(5.6, 23.1, 5.4);
-        spotLight.rotation.set(-0.8, 42.7, 19.5);
-        spotLight.intensity = 2;
-        spotLight.angle = 60 * (Math.PI / 180);
-        spotLight.distance = 200;
-        spotLight.castShadow = true;
-        spotLight.shadowCameraNear = 1;
-        spotLight.shadowMapHeight = 2048;
-        spotLight.shadowMapWidth = 2048;
-        scene.add(spotLight);
-        console.log("Added a SpotLight Light to Scene");
+        /* ENTER CODE HERE */
+        // Point Light
+        pointLight = new PointLight(0xffffff);
+        pointLight.position.set(-4, 6, -4);
+        scene.add(pointLight);
+        console.log("Added pointLight to scene");
+        // Tower Object
+        towerGeometry = new CubeGeometry(2, 10, 2);
+        towerMaterial = new LambertMaterial({ color: 0xc9c9c9 });
+        tower = new Mesh(towerGeometry, towerMaterial);
+        tower.position.setY(5);
+        scene.add(tower);
+        console.log("Added Tower Object to scene");
+        // Burnt Ground
+        groundGeometry = new PlaneGeometry(16, 16);
+        groundMaterial = new LambertMaterial({ color: 0xe75d14 });
+        ground = new Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -0.5 * Math.PI;
+        scene.add(ground);
+        console.log("Added Burnt Ground to scene");
+        // Add Helper Axis
+        axes = new AxisHelper(30);
+        ground.add(axes);
+        console.log("Added Axis Helper Object to the ground");
         // add controls
         gui = new GUI();
         control = new Control(0.05);
@@ -109,7 +95,7 @@ var game = (function () {
         gameLoop(); // render the scene	
     }
     function addControl(controlObject) {
-        gui.add(controlObject, 'rotationSpeed', -0.5, 0.5);
+        //gui.add(controlObject, 'rotationSpeed', -0.5, 0.5);
     }
     function addStatsObject() {
         stats = new Stats();
@@ -122,9 +108,6 @@ var game = (function () {
     // Setup main game loop
     function gameLoop() {
         stats.update();
-        var delta = clock.getDelta();
-        sphere.rotation.y += control.rotationSpeed;
-        firstPersonControls.update(delta);
         // render using requestAnimationFrame
         requestAnimationFrame(gameLoop);
         // render the scene
@@ -133,7 +116,7 @@ var game = (function () {
     // Setup default renderer
     function setupRenderer() {
         renderer = new Renderer();
-        renderer.setClearColor(0xEEEEEE, 1.0);
+        renderer.setClearColor(0x404040, 1.0);
         renderer.setSize(CScreen.WIDTH, CScreen.HEIGHT);
         //renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
@@ -141,11 +124,11 @@ var game = (function () {
     }
     // Setup main camera for the scene
     function setupCamera() {
-        camera = new PerspectiveCamera(45, config.Screen.RATIO, 0.1, 1000);
-        //camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.x = 0.6;
-        camera.position.y = 16;
-        camera.position.z = -20.5;
+        camera = new PerspectiveCamera(35, config.Screen.RATIO, 0.1, 100);
+        camera.position.x = 15.3;
+        camera.position.y = 18.5;
+        camera.position.z = -28.7;
+        camera.rotation.set(-1.10305, 0.49742, -0.1396);
         camera.lookAt(new Vector3(0, 0, 0));
         console.log("Finished setting up Camera...");
     }

@@ -8,7 +8,7 @@ var objects;
             this.rotationSpeed = rotationSpeed;
         }
         return Control;
-    })();
+    }());
     objects.Control = Control;
 })(objects || (objects = {}));
 
