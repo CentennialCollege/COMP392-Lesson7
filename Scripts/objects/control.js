@@ -4,9 +4,14 @@ var objects;
     // CONTROL CLASS ++++++++++++++++++++++++++++++++++++++++++
     var Control = (function () {
         // CONSTRUCTOR ++++++++++++++++++++++++++++++++++++++++
-        function Control(rotationSpeed) {
+        function Control(rotationSpeed, goDown) {
             this.rotationSpeed = rotationSpeed;
+            this.goDown = goDown;
         }
+        Control.prototype.toggle = function () {
+            this.goDown = this.goDown ? false : true;
+            console.log(this.goDown);
+        };
         return Control;
     }());
     objects.Control = Control;

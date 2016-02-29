@@ -102,7 +102,7 @@ var game = (() => {
     
         // add controls
         gui = new GUI();
-        control = new Control(0.05);
+        control = new Control(0.05, false);
         addControl(control);
 
         // Add framerate stats
@@ -115,7 +115,8 @@ var game = (() => {
     }
 
     function addControl(controlObject: Control): void {
-        //gui.add(controlObject, 'rotationSpeed', -0.5, 0.5);
+        gui.add(controlObject, 'rotationSpeed', -0.5, 0.5);
+        gui.add(controlObject, "toggle");
     }
 
     function addStatsObject() {
@@ -130,6 +131,11 @@ var game = (() => {
     // Setup main game loop
     function gameLoop(): void {
         stats.update();
+    
+        if(control.goDown) {
+             tower.position.y -= 0.1;
+        }
+       
     
         // render using requestAnimationFrame
         requestAnimationFrame(gameLoop);

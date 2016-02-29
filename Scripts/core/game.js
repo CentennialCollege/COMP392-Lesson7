@@ -86,7 +86,7 @@ var game = (function () {
         console.log("Added Axis Helper Object to the ground");
         // add controls
         gui = new GUI();
-        control = new Control(0.05);
+        control = new Control(0.05, false);
         addControl(control);
         // Add framerate stats
         addStatsObject();
@@ -95,7 +95,8 @@ var game = (function () {
         gameLoop(); // render the scene	
     }
     function addControl(controlObject) {
-        //gui.add(controlObject, 'rotationSpeed', -0.5, 0.5);
+        gui.add(controlObject, 'rotationSpeed', -0.5, 0.5);
+        gui.add(controlObject, "toggle");
     }
     function addStatsObject() {
         stats = new Stats();
@@ -108,6 +109,9 @@ var game = (function () {
     // Setup main game loop
     function gameLoop() {
         stats.update();
+        if (control.goDown) {
+            tower.position.y -= 0.1;
+        }
         // render using requestAnimationFrame
         requestAnimationFrame(gameLoop);
         // render the scene
